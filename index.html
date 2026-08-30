@@ -519,7 +519,7 @@
     </div>
 
     <script>
-        const LINE_STORE_ID = "https://lin.ee/@212nfhof"; 
+        const LINE_ACCOUNT_ID = "@212nfhof"; 
 
         // ตรวจสอบตัวเลือก Scoop ว่าจะเปิดหรือปิดการเลือกท็อปปิ้ง
         function checkScoopOption() {
@@ -643,7 +643,9 @@
             }
 
             const encodedMessage = encodeURIComponent(message);
-            const lineRedirectUrl = `https://line.me/R/oaMessage/${LINE_STORE_ID}/?${encodedMessage}`;
+            
+            // ลิงก์สำหรับส่งข้อความออเดอร์เข้าไปในแชต LINE OA ของร้าน
+            const lineRedirectUrl = `https://line.me/R/oaMessage/${LINE_ACCOUNT_ID}/?${encodedMessage}`;
 
             window.open(lineRedirectUrl, '_blank');
         }
