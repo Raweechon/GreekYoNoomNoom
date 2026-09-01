@@ -278,7 +278,7 @@
     <script>
         const LINE_ACCOUNT_ID = "@212nfhof"; 
         // ⚠️ วาง Web App URL ที่ได้จาก Google Apps Script ที่นี่ครับ
-        const GOOGLE_SHEET_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzELrSD9Vx3dzTHQy6yFNtRHqTfyDGff3WZDpldnppNAy3Ql4QPkRxBnzRIBSd6Xwk4Nw/exec"; 
+        const GOOGLE_SHEET_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwzwpARysrc_RCzFP6mC3hUtNaEyc8PaugRMpRIylFv4tkiia-WqEKXNwGEJyF3iLaf1Q/exec"; 
 
         function checkScoopOption() {
             const selectedSize = document.querySelector('input[name="size"]:checked');
@@ -358,7 +358,7 @@
             btnSubmit.innerText = "กำลังบันทึกออเดอร์...";
 
             // 1. ส่งข้อมูลเข้า Google Sheet แบบ Autonomous (เบื้องหลัง)
-            if (GOOGLE_SHEET_SCRIPT_URL && GOOGLE_SHEET_SCRIPT_URL !== "https://script.google.com/macros/s/AKfycbzELrSD9Vx3dzTHQy6yFNtRHqTfyDGff3WZDpldnppNAy3Ql4QPkRxBnzRIBSd6Xwk4Nw/exec") {
+            if (GOOGLE_SHEET_SCRIPT_URL && GOOGLE_SHEET_SCRIPT_URL !== "https://script.google.com/macros/s/AKfycbwzwpARysrc_RCzFP6mC3hUtNaEyc8PaugRMpRIylFv4tkiia-WqEKXNwGEJyF3iLaf1Q/exec") {
                 try {
                     await fetch(GOOGLE_SHEET_SCRIPT_URL, {
                         method: 'POST',
