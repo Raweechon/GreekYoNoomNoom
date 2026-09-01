@@ -22,317 +22,51 @@
             --radius-lg: 20px;
             --radius-md: 12px;
             --shadow: 0 10px 30px rgba(92, 61, 46, 0.08);
-            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Kanit', sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Kanit', sans-serif; }
+        body { background-color: var(--bg-base); color: var(--text-dark); line-height: 1.6; padding-bottom: 120px; }
 
-        body {
-            background-color: var(--bg-base);
-            color: var(--text-dark);
-            line-height: 1.6;
-            padding-bottom: 120px;
-        }
-
-        /* Header & Banner */
         header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-            color: white;
-            text-align: center;
-            padding: 40px 20px 30px;
-            border-bottom-left-radius: 30px;
-            border-bottom-right-radius: 30px;
-            box-shadow: var(--shadow);
+            color: white; text-align: center; padding: 40px 20px 30px;
+            border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: var(--shadow);
         }
+        header .logo-badge { background: var(--accent); color: var(--primary); font-weight: 700; font-size: 0.85rem; padding: 4px 14px; border-radius: 50px; display: inline-block; margin-bottom: 10px; }
+        header h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 8px; }
 
-        header .logo-badge {
-            background: var(--accent);
-            color: var(--primary);
-            font-weight: 700;
-            font-size: 0.85rem;
-            padding: 4px 14px;
-            border-radius: 50px;
-            display: inline-block;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+        .container { max-width: 900px; margin: -20px auto 0; padding: 0 20px; }
+        .builder-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
+        @media (min-width: 768px) { .builder-grid { grid-template-columns: 1fr 340px; } }
 
-        header h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
+        .card { background: var(--bg-card); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow); margin-bottom: 24px; transition: opacity 0.3s ease; }
+        .card-title { font-size: 1.25rem; font-weight: 600; color: var(--primary); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid var(--bg-base); padding-bottom: 10px; }
+        .card-title span.step { background: var(--accent-soft); color: var(--primary); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 700; }
 
-        header p {
-            font-size: 1rem;
-            opacity: 0.9;
-            font-weight: 300;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: -20px auto 0;
-            padding: 0 20px;
-        }
-
-        /* Layout Grid */
-        .builder-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 24px;
-        }
-
-        @media (min-width: 768px) {
-            .builder-grid {
-                grid-template-columns: 1fr 340px;
-            }
-        }
-
-        .card {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            box-shadow: var(--shadow);
-            margin-bottom: 24px;
-            transition: opacity 0.3s ease;
-        }
-
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-bottom: 2px solid var(--bg-base);
-            padding-bottom: 10px;
-        }
-
-        .card-title span.step {
-            background: var(--accent-soft);
-            color: var(--primary);
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.9rem;
-            font-weight: 700;
-        }
-
-        .section-subtitle {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--primary-light);
-            margin: 12px 0 8px;
-        }
-
-        /* Option Item Boxes */
-        .option-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 12px;
-        }
-
-        .option-item {
-            position: relative;
-        }
-
-        .option-item input[type="radio"],
-        .option-item input[type="checkbox"] {
-            position: absolute;
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .option-label {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 16px 12px;
-            background: var(--bg-base);
-            border: 2px solid transparent;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: center;
-            height: 100%;
-        }
-
-        .option-label .icon {
-            font-size: 1.8rem;
-            margin-bottom: 6px;
-        }
-
-        .option-label .name {
-            font-weight: 500;
-            font-size: 0.95rem;
-            color: var(--text-dark);
-        }
-
-        .option-label .price {
-            font-size: 0.85rem;
-            color: var(--primary-light);
-            font-weight: 600;
-            margin-top: 2px;
-        }
-
-        /* Selection States */
-        .option-item input:checked + .option-label {
-            background: #fff;
-            border-color: var(--primary);
-            box-shadow: 0 4px 12px rgba(92, 61, 46, 0.15);
-            transform: translateY(-2px);
-        }
-
-        /* Disabled State for Toppings */
-        .option-item input:disabled + .option-label {
-            background-color: #f0f0f0;
-            border-color: transparent;
-            color: #aaa;
-            cursor: not-allowed;
-            opacity: 0.6;
-            box-shadow: none;
-            transform: none;
-        }
+        .option-group { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+        .option-item { position: relative; }
+        .option-item input[type="radio"], .option-item input[type="checkbox"] { position: absolute; opacity: 0; width: 0; height: 0; }
+        .option-label { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px 12px; background: var(--bg-base); border: 2px solid transparent; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease; text-align: center; height: 100%; }
+        .option-label .icon { font-size: 1.8rem; margin-bottom: 6px; }
+        .option-label .name { font-weight: 500; font-size: 0.95rem; color: var(--text-dark); }
+        .option-label .price { font-size: 0.85rem; color: var(--primary-light); font-weight: 600; margin-top: 2px; }
         
-        .option-item input:disabled + .option-label .name,
-        .option-item input:disabled + .option-label .price {
-            color: #aaa;
-        }
+        .option-item input:checked + .option-label { background: #fff; border-color: var(--primary); box-shadow: 0 4px 12px rgba(92, 61, 46, 0.15); transform: translateY(-2px); }
+        .option-item input:disabled + .option-label { background-color: #f0f0f0; opacity: 0.6; cursor: not-allowed; }
 
-        /* Form Inputs */
-        .form-group {
-            margin-bottom: 16px;
-        }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-weight: 500; margin-bottom: 6px; font-size: 0.95rem; }
+        .form-control { width: 100%; padding: 12px 16px; border: 1.5px solid #e2d9d0; border-radius: var(--radius-md); font-size: 0.95rem; outline: none; background-color: #fcfbfa; }
 
-        .form-group label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 6px;
-            font-size: 0.95rem;
-            color: var(--text-dark);
-        }
+        .summary-card { position: sticky; top: 20px; }
+        .summary-item { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.95rem; }
+        .summary-toppings-list { font-size: 0.85rem; color: var(--text-muted); padding-left: 12px; margin: 4px 0 10px; white-space: pre-line; }
+        .divider { height: 1px; background: #eee; margin: 16px 0; }
+        .total-price { display: flex; justify-content: space-between; align-items: center; font-size: 1.3rem; font-weight: 700; color: var(--primary); }
 
-        .form-control {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1.5px solid #e2d9d0;
-            border-radius: var(--radius-md);
-            font-size: 0.95rem;
-            outline: none;
-            transition: border-color 0.2s;
-            background-color: #fcfbfa;
-        }
-
-        .form-control:focus {
-            border-color: var(--primary);
-            background-color: #fff;
-        }
-
-        textarea.form-control {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        /* Order Summary Sidebar */
-        .summary-card {
-            position: sticky;
-            top: 20px;
-        }
-
-        .summary-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 0.95rem;
-        }
-
-        .summary-item .title {
-            color: var(--text-muted);
-        }
-
-        .summary-item .val {
-            font-weight: 500;
-            text-align: right;
-        }
-
-        .summary-toppings-list {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            padding-left: 12px;
-            margin-top: 4px;
-            margin-bottom: 10px;
-            white-space: pre-line;
-        }
-
-        .divider {
-            height: 1px;
-            background: #eee;
-            margin: 16px 0;
-        }
-
-        .total-price {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        /* LINE Order Button */
-        .btn-line {
-            width: 100%;
-            background-color: var(--line-green);
-            color: white;
-            border: none;
-            padding: 16px;
-            border-radius: var(--radius-md);
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
-            transition: background-color 0.2s, transform 0.1s;
-            box-shadow: 0 4px 14px rgba(6, 199, 85, 0.3);
-        }
-
-        .btn-line:hover {
-            background-color: var(--line-green-hover);
-            transform: translateY(-2px);
-        }
-
-        .btn-line:active {
-            transform: translateY(0);
-        }
-
-        .btn-line svg {
-            width: 26px;
-            height: 26px;
-            fill: currentColor;
-        }
-
-        /* Mobile Bottom Bar Fix */
-        @media (max-width: 767px) {
-            .summary-card {
-                position: relative;
-                top: 0;
-            }
-        }
+        .btn-line { width: 100%; background-color: var(--line-green); color: white; border: none; padding: 16px; border-radius: var(--radius-md); font-size: 1.1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; transition: background-color 0.2s; box-shadow: 0 4px 14px rgba(6, 199, 85, 0.3); }
+        .btn-line:hover { background-color: var(--line-green-hover); }
+        .btn-line:disabled { background-color: #ccc; cursor: not-allowed; box-shadow: none; }
     </style>
 </head>
 <body>
@@ -346,9 +80,33 @@
     <div class="container">
         <div class="builder-grid">
             
-            <!-- Main Form Step Section -->
             <div class="main-options">
                 
+                <!-- Step 0: Order Type (เพิ่มใหม่สำหรับเลือกยอดขาย / Pre-order) -->
+                <div class="card">
+                    <div class="card-title">
+                        <span class="step">0</span> รูปแบบการสั่งซื้อ
+                    </div>
+                    <div class="option-group">
+                        <div class="option-item">
+                            <input type="radio" id="type-now" name="orderType" value="สั่งซื้อทันที" checked onchange="calculateTotal()">
+                            <label for="type-now" class="option-label">
+                                <span class="icon">⚡</span>
+                                <span class="name">สั่งซื้อทันที</span>
+                                <span class="price">พร้อมส่ง</span>
+                            </label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" id="type-pre" name="orderType" value="Pre-order" onchange="calculateTotal()">
+                            <label for="type-pre" class="option-label">
+                                <span class="icon">📅</span>
+                                <span class="name">Pre-order</span>
+                                <span class="price">จองล่วงหน้า</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Step 1: Base Yogurt -->
                 <div class="card">
                     <div class="card-title">
@@ -469,7 +227,7 @@
                     </div>
                     <div class="form-group">
                         <label for="cust-address">สถานที่จัดส่ง / หมายเหตุเพิ่มเติม</label>
-                        <textarea id="cust-address" class="form-control" placeholder="ระบุที่อยู่จัดส่ง หรือรายละเอียดพิเศษ เช่น หวานน้อย"></textarea>
+                        <textarea id="cust-address" class="form-control" placeholder="ระบุที่อยู่จัดส่ง หรือวันที่ต้องการรับกรณี Pre-order"></textarea>
                     </div>
                 </div>
 
@@ -484,6 +242,10 @@
                     <div class="divider"></div>
 
                     <div class="summary-item">
+                        <span class="title">รูปแบบ:</span>
+                        <span class="val" id="sum-type">สั่งซื้อทันที</span>
+                    </div>
+                    <div class="summary-item">
                         <span class="title">รสชาติ:</span>
                         <span class="val" id="sum-base">รสออริจินัล</span>
                     </div>
@@ -495,9 +257,7 @@
                         <span class="title">ท็อปปิ้ง:</span>
                         <span class="val" id="sum-topping-count">0 รายการ</span>
                     </div>
-                    <div class="summary-toppings-list" id="sum-toppings-detail">
-                        - ไม่มีท็อปปิ้ง -
-                    </div>
+                    <div class="summary-toppings-list" id="sum-toppings-detail">- ไม่มีท็อปปิ้ง -</div>
 
                     <div class="divider"></div>
 
@@ -506,10 +266,7 @@
                         <span id="sum-total">40 ฿</span>
                     </div>
 
-                    <button type="button" class="btn-line" onclick="sendToLine()">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M24 10.304c0-5.369-5.383-9.738-12-9.738-6.616 0-12 4.369-12 9.738 0 4.814 4.269 8.846 10.036 9.608.391.084.922.258 1.057.592.121.303.079.778.039 1.085l-.171 1.027c-.053.303-.242 1.185 1.039.646 1.281-.54 6.911-4.069 9.428-6.967 1.739-1.907 2.572-3.844 2.572-6.001zm-16.2 2.256h-2.1v-4.5c0-.331-.269-.6-.6-.6s-.6.269-.6.6v5.1c0 .331.269.6.6.6h2.7c.331 0 .6-.269.6-.6s-.269-.6-.6-.6zm3.6 0h-1.2v-4.5c0-.331-.269-.6-.6-.6s-.6.269-.6.6v5.1c0 .331.269.6.6.6h1.8c.331 0 .6-.269.6-.6s-.269-.6-.6-.6zm2.7-2.1l-1.423-2.277c-.092-.147-.253-.235-.426-.235-.331 0-.6.269-.6.6v4.5c0 .331.269.6.6.6s.6-.269.6-.6v-2.223l1.423 2.277c.092.147.253.235.426.235.331 0 .6-.269.6-.6v-4.5c0-.331-.269-.6-.6-.6s-.6.269-.6.6v2.223zm4.5 2.1h-2.1v-4.5c0-.331-.269-.6-.6-.6s-.6.269-.6.6v5.1c0 .331.269.6.6.6h2.7c.331 0 .6-.269.6-.6s-.269-.6-.6-.6z"/>
-                        </svg>
+                    <button type="button" class="btn-line" id="btn-submit" onclick="sendToLine()">
                         สั่งซื้อผ่าน LINE
                     </button>
                 </div>
@@ -520,8 +277,9 @@
 
     <script>
         const LINE_ACCOUNT_ID = "@212nfhof"; 
+        // ⚠️ วาง Web App URL ที่ได้จาก Google Apps Script ที่นี่ครับ
+        const GOOGLE_SHEET_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzELrSD9Vx3dzTHQy6yFNtRHqTfyDGff3WZDpldnppNAy3Ql4QPkRxBnzRIBSd6Xwk4Nw/exec"; 
 
-        // ตรวจสอบตัวเลือก Scoop ว่าจะเปิดหรือปิดการเลือกท็อปปิ้ง
         function checkScoopOption() {
             const selectedSize = document.querySelector('input[name="size"]:checked');
             const isNoFruit = selectedSize && (selectedSize.value === "1 สกูป (60g)" || selectedSize.value === "2 สกูป (120g)");
@@ -529,20 +287,12 @@
             const toppingCard = document.getElementById('topping-card');
 
             if (isNoFruit) {
-                // ถ้าเลือกแบบไม่มีผลไม้ ให้ปลดเช็กและ Disable ท็อปปิ้งทั้งหมด
-                toppingInputs.forEach(input => {
-                    input.checked = false;
-                    input.disabled = true;
-                });
+                toppingInputs.forEach(input => { input.checked = false; input.disabled = true; });
                 toppingCard.style.opacity = "0.6";
             } else {
-                // ถ้าเลือกแบบมีผลไม้ ให้ Enable ท็อปปิ้งทั้งหมด
-                toppingInputs.forEach(input => {
-                    input.disabled = false;
-                });
+                toppingInputs.forEach(input => { input.disabled = false; });
                 toppingCard.style.opacity = "1";
             }
-
             calculateTotal();
         }
 
@@ -557,23 +307,20 @@
         }
 
         function calculateTotal() {
-            // Base Yogurt (รสชาติ - ไม่นำมาคิดราคา)
+            const orderTypeElem = document.querySelector('input[name="orderType"]:checked');
+            const orderType = orderTypeElem ? orderTypeElem.value : 'สั่งซื้อทันที';
+
             const baseElement = document.querySelector('input[name="base"]:checked');
             const baseName = baseElement ? baseElement.value : '';
 
-            // Size / Combo Options
             const sizeElement = document.querySelector('input[name="size"]:checked');
             const sizeName = sizeElement ? sizeElement.value : '';
             const sizePrice = sizeElement ? parseInt(sizeElement.getAttribute('data-price')) : 0;
 
-            // Normal Toppings (ไม่คิดเงิน)
             const normalToppingElements = document.querySelectorAll('input[name="topping-normal"]:checked');
             let normalToppingNames = [];
-            normalToppingElements.forEach(item => {
-                normalToppingNames.push(item.value);
-            });
+            normalToppingElements.forEach(item => normalToppingNames.push(item.value));
 
-            // Premium Toppings (+10 บาท)
             const premiumToppingElements = document.querySelectorAll('input[name="topping-premium"]:checked');
             let premiumToppingPriceSum = 0;
             let premiumToppingNames = [];
@@ -582,35 +329,20 @@
                 premiumToppingNames.push(item.value + " (+10฿)");
             });
 
-            // Calculate Total
             const total = sizePrice + premiumToppingPriceSum;
-
-            // Combined Topping List
             const allToppingNames = [...normalToppingNames, ...premiumToppingNames];
 
-            // Update UI Summary
+            document.getElementById('sum-type').innerText = orderType;
             document.getElementById('sum-base').innerText = baseName;
             document.getElementById('sum-size').innerText = `${sizeName} (${sizePrice}฿)`;
             document.getElementById('sum-topping-count').innerText = allToppingNames.length + " รายการ";
-            
-            if (allToppingNames.length > 0) {
-                document.getElementById('sum-toppings-detail').innerText = "- " + allToppingNames.join("\n- ");
-            } else {
-                document.getElementById('sum-toppings-detail').innerText = "- ไม่มีท็อปปิ้ง -";
-            }
-
+            document.getElementById('sum-toppings-detail').innerText = allToppingNames.length > 0 ? "- " + allToppingNames.join("\n- ") : "- ไม่มีท็อปปิ้ง -";
             document.getElementById('sum-total').innerText = total + " ฿";
 
-            return {
-                baseName,
-                sizeName,
-                sizePrice,
-                allToppingNames,
-                total
-            };
+            return { orderType, baseName, sizeName, sizePrice, allToppingNames, total };
         }
 
-        function sendToLine() {
+        async function sendToLine() {
             const name = document.getElementById('cust-name').value.trim();
             const phone = document.getElementById('cust-phone').value.trim();
             const address = document.getElementById('cust-address').value.trim();
@@ -621,39 +353,55 @@
             }
 
             const currentOrder = calculateTotal();
+            const btnSubmit = document.getElementById('btn-submit');
+            btnSubmit.disabled = true;
+            btnSubmit.innerText = "กำลังบันทึกออเดอร์...";
 
-            let message = `🛒 *ออเดอร์กรีกโยเกิร์ตใหม่ (DIY)*\n`;
+            // 1. ส่งข้อมูลเข้า Google Sheet แบบ Autonomous (เบื้องหลัง)
+            if (GOOGLE_SHEET_SCRIPT_URL && GOOGLE_SHEET_SCRIPT_URL !== "https://script.google.com/macros/s/AKfycbzELrSD9Vx3dzTHQy6yFNtRHqTfyDGff3WZDpldnppNAy3Ql4QPkRxBnzRIBSd6Xwk4Nw/exec") {
+                try {
+                    await fetch(GOOGLE_SHEET_SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors', // รองรับการส่งข้ามโดเมนไปยัง Google Apps Script
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            orderType: currentOrder.orderType,
+                            customerName: name,
+                            customerPhone: phone,
+                            baseName: currentOrder.baseName,
+                            sizeName: currentOrder.sizeName,
+                            toppings: currentOrder.allToppingNames,
+                            totalPrice: currentOrder.total,
+                            addressNote: address
+                        })
+                    });
+                } catch (err) {
+                    console.error("Sheet record error:", err);
+                }
+            }
+
+            // 2. เด้งเข้า LINE OA ของร้านพร้อมสร้างข้อความส่งออเดอร์
+            let message = `🛒 *ออเดอร์กรีกโยเกิร์ต (${currentOrder.orderType})*\n`;
             message += `------------------------------\n`;
             message += `🥣 *รสชาติ:* ${currentOrder.baseName}\n`;
             message += `🍨 *ตัวเลือก:* ${currentOrder.sizeName} (${currentOrder.sizePrice} บาท)\n`;
-            
-            if (currentOrder.allToppingNames.length > 0) {
-                message += `🍓 *ท็อปปิ้งผลไม้:*\n  • ` + currentOrder.allToppingNames.join("\n  • ") + `\n`;
-            } else {
-                message += `🍓 *ท็อปปิ้งผลไม้:* ไม่เลือกท็อปปิ้ง\n`;
-            }
-
+            message += currentOrder.allToppingNames.length > 0 ? `🍓 *ท็อปปิ้ง:*\n  • ` + currentOrder.allToppingNames.join("\n  • ") + `\n` : `🍓 *ท็อปปิ้ง:* ไม่เลือกท็อปปิ้ง\n`;
             message += `------------------------------\n`;
             message += `💰 *ราคารวม:* ${currentOrder.total} บาท\n`;
             message += `------------------------------\n`;
             message += `👤 *ชื่อลูกค้า:* ${name}\n`;
             message += `📞 *เบอร์โทร:* ${phone}\n`;
-            if (address) {
-                message += `📍 *ที่อยู่/หมายเหตุ:* ${address}\n`;
-            }
+            if (address) message += `📍 *ที่อยู่/หมายเหตุ:* ${address}\n`;
 
             const encodedMessage = encodeURIComponent(message);
-            
-            // ลิงก์สำหรับส่งข้อความออเดอร์เข้าไปในแชต LINE OA ของร้าน
             const lineRedirectUrl = `https://line.me/R/oaMessage/${LINE_ACCOUNT_ID}/?${encodedMessage}`;
 
+            btnSubmit.disabled = false;
+            btnSubmit.innerText = "สั่งซื้อผ่าน LINE";
             window.open(lineRedirectUrl, '_blank');
         }
 
-        // Initialize On Load
-        window.onload = function() {
-            checkScoopOption();
-        };
+        window.onload = function() { checkScoopOption(); };
     </script>
 </body>
 </html>
