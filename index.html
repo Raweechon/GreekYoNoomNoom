@@ -276,67 +276,132 @@
     </div>
 
     <script>
-       const LINE_ACCOUNT_ID = "@212nfhof"; 
-        const GOOGLE_SHEET_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxN3EC4PYxSTdN2edrWnOUwf2u2e0VyBD7TIvuOAZFHWl1UMmOyGhXmlCTZjzsRmJBh2g/exec"; 
+        const LINE_ACCOUNT_ID = "@212nfhof"; 
+        // ⚠️ วาง Web App URL ที่ได้จาก Google Apps Script ที่นี่ครับ
+        const GOOGLE_SHEET_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwZNZiHd1ZAB-S0CnrzpuLtsh43HKeneXK6LLB2NnWloQ9hVGy1gIxFQEX0n5sMA4OUuA/exec"; 
 
-    function sendToLine() {
-    const name = document.getElementById('cust-name').value.trim();
-    const phone = document.getElementById('cust-phone').value.trim();
-    const address = document.getElementById('cust-address').value.trim();
+        function checkScoopOption() {
+            const selectedSize = document.querySelector('input[name="size"]:checked');
+            const isNoFruit = selectedSize && (selectedSize.value === "1 สกูป (60g)" || selectedSize.value === "2 สกูป (120g)");
+            const toppingInputs = document.querySelectorAll('input[name="topping-normal"], input[name="topping-premium"]');
+            const toppingCard = document.getElementById('topping-card');
 
-    if (!name || !phone) {
-        alert("กรุณากรอกชื่อและเบอร์โทรศัพท์ก่อนกดสั่งซื้อครับ");
-        return;
-    }
+            if (isNoFruit) {
+                toppingInputs.forEach(input => { input.checked = false; input.disabled = true; });
+                toppingCard.style.opacity = "0.6";
+            } else {
+                toppingInputs.forEach(input => { input.disabled = false; });
+                toppingCard.style.opacity = "1";
+            }
+            calculateTotal();
+        }
 
-    const currentOrder = calculateTotal();
-    const btnSubmit = document.getElementById('btn-submit');
-    btnSubmit.disabled = true;
-    btnSubmit.innerText = "กำลังบันทึกออเดอร์...";
+        function handleNormalToppingChange(element) {
+            const checkedNormalToppings = document.querySelectorAll('input[name="topping-normal"]:checked');
+            if (checkedNormalToppings.length > 3) {
+                alert("ผลไม้ธรรมดาสามารถเลือกได้ไม่เกิน 3 ชนิดครับ");
+                element.checked = false;
+                return;
+            }
+            calculateTotal();
+        }
 
-    // 1. ส่งข้อมูลเข้า Google Sheets ผ่าน doGet(e) โดยใช้ Query Parameters
-    if (GOOGLE_SHEET_SCRIPT_URL) {
-        const params = new URLSearchParams({
-            orderType: currentOrder.orderType,
-            customerName: name,
-            customerPhone: phone,
-            baseName: currentOrder.baseName,
-            sizeName: currentOrder.sizeName,
-            toppings: currentOrder.allToppingNames.length > 0 ? currentOrder.allToppingNames.join(", ") : "ไม่มีท็อปปิ้ง",
-            totalPrice: currentOrder.total,
-            addressNote: address
-        });
+        function calculateTotal() {
+            const orderTypeElem = document.querySelector('input[name="orderType"]:checked');
+            const orderType = orderTypeElem ? orderTypeElem.value : 'สั่งซื้อทันที';
 
-        // ยิงข้อมูลเข้า Apps Script ผ่าน GET Request
-        const recordUrl = `${GOOGLE_SHEET_SCRIPT_URL}?${params.toString()}`;
-        
-        // ใช้ Image Object เพื่อส่งข้อมูลโดยไม่ต้องกังวลเรื่อง CORS Block
-        const img = new Image();
-        img.src = recordUrl;
-    }
+            const baseElement = document.querySelector('input[name="base"]:checked');
+            const baseName = baseElement ? baseElement.value : '';
 
-    // 2. สรุปออเดอร์แล้วส่งเข้า LINE OA ของร้าน
-    let message = `🛒 *ออเดอร์กรีกโยเกิร์ต (${currentOrder.orderType})*\n`;
-    message += `------------------------------\n`;
-    message += `🥣 *รสชาติ:* ${currentOrder.baseName}\n`;
-    message += `🍨 *ตัวเลือก:* ${currentOrder.sizeName} (${currentOrder.sizePrice} บาท)\n`;
-    message += currentOrder.allToppingNames.length > 0 ? `🍓 *ท็อปปิ้ง:*\n  • ` + currentOrder.allToppingNames.join("\n  • ") + `\n` : `🍓 *ท็อปปิ้ง:* ไม่เลือกท็อปปิ้ง\n`;
-    message += `------------------------------\n`;
-    message += `💰 *ราคารวม:* ${currentOrder.total} บาท\n`;
-    message += `------------------------------\n`;
-    message += `👤 *ชื่อลูกค้า:* ${name}\n`;
-    message += `📞 *เบอร์โทร:* ${phone}\n`;
-    if (address) message += `📍 *ที่อยู่/หมายเหตุ:* ${address}\n`;
+            const sizeElement = document.querySelector('input[name="size"]:checked');
+            const sizeName = sizeElement ? sizeElement.value : '';
+            const sizePrice = sizeElement ? parseInt(sizeElement.getAttribute('data-price')) : 0;
 
-    const encodedMessage = encodeURIComponent(message);
-    const lineRedirectUrl = `https://line.me/R/oaMessage/${LINE_ACCOUNT_ID}/?${encodedMessage}`;
+            const normalToppingElements = document.querySelectorAll('input[name="topping-normal"]:checked');
+            let normalToppingNames = [];
+            normalToppingElements.forEach(item => normalToppingNames.push(item.value));
 
-    setTimeout(() => {
-        btnSubmit.disabled = false;
-        btnSubmit.innerText = "สั่งซื้อผ่าน LINE";
-        window.open(lineRedirectUrl, '_blank');
-    }, 400);
-}
+            const premiumToppingElements = document.querySelectorAll('input[name="topping-premium"]:checked');
+            let premiumToppingPriceSum = 0;
+            let premiumToppingNames = [];
+            premiumToppingElements.forEach(item => {
+                premiumToppingPriceSum += parseInt(item.getAttribute('data-price'));
+                premiumToppingNames.push(item.value + " (+10฿)");
+            });
+
+            const total = sizePrice + premiumToppingPriceSum;
+            const allToppingNames = [...normalToppingNames, ...premiumToppingNames];
+
+            document.getElementById('sum-type').innerText = orderType;
+            document.getElementById('sum-base').innerText = baseName;
+            document.getElementById('sum-size').innerText = `${sizeName} (${sizePrice}฿)`;
+            document.getElementById('sum-topping-count').innerText = allToppingNames.length + " รายการ";
+            document.getElementById('sum-toppings-detail').innerText = allToppingNames.length > 0 ? "- " + allToppingNames.join("\n- ") : "- ไม่มีท็อปปิ้ง -";
+            document.getElementById('sum-total').innerText = total + " ฿";
+
+            return { orderType, baseName, sizeName, sizePrice, allToppingNames, total };
+        }
+
+        async function sendToLine() {
+            const name = document.getElementById('cust-name').value.trim();
+            const phone = document.getElementById('cust-phone').value.trim();
+            const address = document.getElementById('cust-address').value.trim();
+
+            if (!name || !phone) {
+                alert("กรุณากรอกชื่อและเบอร์โทรศัพท์ก่อนกดสั่งซื้อครับ");
+                return;
+            }
+
+            const currentOrder = calculateTotal();
+            const btnSubmit = document.getElementById('btn-submit');
+            btnSubmit.disabled = true;
+            btnSubmit.innerText = "กำลังบันทึกออเดอร์...";
+
+            // 1. ส่งข้อมูลเข้า Google Sheet แบบ Autonomous (เบื้องหลัง)
+            if (GOOGLE_SHEET_SCRIPT_URL && GOOGLE_SHEET_SCRIPT_URL !== "https://script.google.com/macros/s/AKfycbwZNZiHd1ZAB-S0CnrzpuLtsh43HKeneXK6LLB2NnWloQ9hVGy1gIxFQEX0n5sMA4OUuA/exec") {
+                try {
+                    await fetch(GOOGLE_SHEET_SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors', // รองรับการส่งข้ามโดเมนไปยัง Google Apps Script
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            orderType: currentOrder.orderType,
+                            customerName: name,
+                            customerPhone: phone,
+                            baseName: currentOrder.baseName,
+                            sizeName: currentOrder.sizeName,
+                            toppings: currentOrder.allToppingNames,
+                            totalPrice: currentOrder.total,
+                            addressNote: address
+                        })
+                    });
+                } catch (err) {
+                    console.error("Sheet record error:", err);
+                }
+            }
+
+            // 2. เด้งเข้า LINE OA ของร้านพร้อมสร้างข้อความส่งออเดอร์
+            let message = `🛒 *ออเดอร์กรีกโยเกิร์ต (${currentOrder.orderType})*\n`;
+            message += `------------------------------\n`;
+            message += `🥣 *รสชาติ:* ${currentOrder.baseName}\n`;
+            message += `🍨 *ตัวเลือก:* ${currentOrder.sizeName} (${currentOrder.sizePrice} บาท)\n`;
+            message += currentOrder.allToppingNames.length > 0 ? `🍓 *ท็อปปิ้ง:*\n  • ` + currentOrder.allToppingNames.join("\n  • ") + `\n` : `🍓 *ท็อปปิ้ง:* ไม่เลือกท็อปปิ้ง\n`;
+            message += `------------------------------\n`;
+            message += `💰 *ราคารวม:* ${currentOrder.total} บาท\n`;
+            message += `------------------------------\n`;
+            message += `👤 *ชื่อลูกค้า:* ${name}\n`;
+            message += `📞 *เบอร์โทร:* ${phone}\n`;
+            if (address) message += `📍 *ที่อยู่/หมายเหตุ:* ${address}\n`;
+
+            const encodedMessage = encodeURIComponent(message);
+            const lineRedirectUrl = `https://line.me/R/oaMessage/${LINE_ACCOUNT_ID}/?${encodedMessage}`;
+
+            btnSubmit.disabled = false;
+            btnSubmit.innerText = "สั่งซื้อผ่าน LINE";
+            window.open(lineRedirectUrl, '_blank');
+        }
+
+        window.onload = function() { checkScoopOption(); };
     </script>
 </body>
 </html>
