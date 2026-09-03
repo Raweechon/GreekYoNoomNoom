@@ -31,9 +31,35 @@
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
             color: white; text-align: center; padding: 40px 20px 30px;
             border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: var(--shadow);
+            position: relative;
         }
         header .logo-badge { background: var(--accent); color: var(--primary); font-weight: 700; font-size: 0.85rem; padding: 4px 14px; border-radius: 50px; display: inline-block; margin-bottom: 10px; }
         header h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 8px; }
+
+        /* ปุ่ม Admin สำหรับเชื่อมต่อไปหน้า Admin Stock */
+        .btn-admin-link {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-decoration: none;
+            backdrop-filter: blur(5px);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .btn-admin-link:hover {
+            background: var(--accent);
+            color: var(--primary);
+            border-color: var(--accent);
+        }
 
         .container { max-width: 900px; margin: -20px auto 0; padding: 0 20px; }
         .builder-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
@@ -74,6 +100,9 @@
 <body>
 
     <header>
+        <!-- ปุ่ม Admin เชื่อมไปยังหน้า Admin Stock -->
+        <a href="admin.html" class="btn-admin-link">⚙️ Admin</a>
+        
         <span class="logo-badge">Homemade & Fresh</span>
         <h1>Greek NOOM NOOM</h1>
         <p>กรีกโยเกิร์ตในสไตล์คุณ สด ใหม่ เข้มข้น อร่อยทุกคำ</p>
@@ -304,13 +333,11 @@
                 toppingCard.style.opacity = "0.6";
             } else {
                 toppingCard.style.opacity = "1";
-                // เรียกฟังก์ชันตรวจสอบลิมิตเพื่อเปิดคืนค่าปุ่มตามปกติ
                 handleToppingChange();
             }
             calculateTotal();
         }
 
-        // ฟังก์ชันตรวจสอบจำนวนการเลือกท็อปปิ้งรวมทุกประเภท (ไม่เกิน 3 ชนิด)
         function handleToppingChange(element) {
             const allToppingInputs = document.querySelectorAll('.topping-input');
             const checkedToppings = document.querySelectorAll('.topping-input:checked');
@@ -321,7 +348,6 @@
                 return;
             }
 
-            // ถ้าเลือกครบ 3 ชนิดแล้ว ให้ล็อคตัวเลือกที่เหลือ แต่ตัวที่เลือกอยู่ยังกดเอาออกได้
             const currentCheckedCount = document.querySelectorAll('.topping-input:checked').length;
             const selectedSize = document.querySelector('input[name="size"]:checked');
             const isNoFruit = selectedSize && (selectedSize.value === "1 สกูป (60g)" || selectedSize.value === "2 สกูป (120g)");
@@ -350,12 +376,10 @@
             const sizeName = sizeElement ? sizeElement.value : '';
             const sizePrice = sizeElement ? parseInt(sizeElement.getAttribute('data-price')) : 0;
 
-            // ผลไม้ธรรมดา (ฟรี)
             const normalToppingElements = document.querySelectorAll('input[name="topping-normal"]:checked');
             let normalToppingNames = [];
             normalToppingElements.forEach(item => normalToppingNames.push(item.value));
 
-            // ผลไม้ Premium (+10)
             const premiumToppingElements = document.querySelectorAll('input[name="topping-premium"]:checked');
             let premiumToppingPriceSum = 0;
             let premiumToppingNames = [];
@@ -364,7 +388,6 @@
                 premiumToppingNames.push(item.value + " (+10฿)");
             });
 
-            // หมวดขนม / สแน็ค (+5)
             const snackElements = document.querySelectorAll('input[name="topping-snack"]:checked');
             let snackPriceSum = 0;
             let snackNames = [];
@@ -401,7 +424,6 @@
             btnSubmit.disabled = true;
             btnSubmit.innerText = "กำลังบันทึกออเดอร์...";
 
-            // 1. ส่งข้อมูลเข้า Google Sheet แบบ Autonomous (เบื้องหลัง)
             if (GOOGLE_SHEET_SCRIPT_URL) {
                 try {
                     await fetch(GOOGLE_SHEET_SCRIPT_URL, {
@@ -424,7 +446,6 @@
                 }
             }
 
-            // 2. เด้งเข้า LINE OA ของร้านพร้อมสร้างข้อความส่งออเดอร์
             let message = `🛒 *ออเดอร์กรีกโยเกิร์ต (${currentOrder.orderType})*\n`;
             message += `------------------------------\n`;
             message += `🥣 *รสชาติ:* ${currentOrder.baseName}\n`;
