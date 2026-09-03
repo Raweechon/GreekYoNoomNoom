@@ -43,6 +43,8 @@
         .card-title { font-size: 1.25rem; font-weight: 600; color: var(--primary); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid var(--bg-base); padding-bottom: 10px; }
         .card-title span.step { background: var(--accent-soft); color: var(--primary); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 700; }
 
+        .section-subtitle { font-size: 0.95rem; font-weight: 600; color: var(--primary-light); margin: 12px 0 8px; }
+
         .option-group { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
         .option-item { position: relative; }
         .option-item input[type="radio"], .option-item input[type="checkbox"] { position: absolute; opacity: 0; width: 0; height: 0; }
@@ -82,7 +84,7 @@
             
             <div class="main-options">
                 
-                <!-- Step 0: Order Type (เพิ่มใหม่สำหรับเลือกยอดขาย / Pre-order) -->
+                <!-- Step 0: Order Type -->
                 <div class="card">
                     <div class="card-title">
                         <span class="step">0</span> รูปแบบการสั่งซื้อ
@@ -165,16 +167,16 @@
                     </div>
                 </div>
 
-                <!-- Step 3: Toppings -->
+                <!-- Step 3: Toppings & Snacks -->
                 <div class="card" id="topping-card">
                     <div class="card-title">
-                        <span class="step">3</span> เลือกท็อปปิ้งผลไม้ (Toppings)
+                        <span class="step">3</span> เลือกท็อปปิ้ง & ขนม (เลือกได้รวมกันไม่เกิน 3 ชนิด)
                     </div>
 
-                    <div class="section-subtitle">🍎 ผลไม้ธรรมดา (ฟรี ไม่เกิน 3 ชนิด)</div>
+                    <div class="section-subtitle">🍎 ผลไม้ธรรมดา (ฟรี)</div>
                     <div class="option-group">
                         <div class="option-item">
-                            <input type="checkbox" id="top-banana" name="topping-normal" value="กล้วยหอม" onchange="handleNormalToppingChange(this)">
+                            <input type="checkbox" id="top-banana" class="topping-input" name="topping-normal" value="กล้วยหอม" onchange="handleToppingChange(this)">
                             <label for="top-banana" class="option-label">
                                 <span class="icon">🍌</span>
                                 <span class="name">กล้วยหอม</span>
@@ -182,7 +184,7 @@
                             </label>
                         </div>
                         <div class="option-item">
-                            <input type="checkbox" id="top-apple" name="topping-normal" value="แอปเปิ้ลแดง" onchange="handleNormalToppingChange(this)">
+                            <input type="checkbox" id="top-apple" class="topping-input" name="topping-normal" value="แอปเปิ้ลแดง" onchange="handleToppingChange(this)">
                             <label for="top-apple" class="option-label">
                                 <span class="icon">🍎</span>
                                 <span class="name">แอปเปิ้ลแดง</span>
@@ -190,7 +192,7 @@
                             </label>
                         </div>
                         <div class="option-item">
-                            <input type="checkbox" id="top-orange" name="topping-normal" value="ส้ม" onchange="handleNormalToppingChange(this)">
+                            <input type="checkbox" id="top-orange" class="topping-input" name="topping-normal" value="ส้ม" onchange="handleToppingChange(this)">
                             <label for="top-orange" class="option-label">
                                 <span class="icon">🍊</span>
                                 <span class="name">ส้ม</span>
@@ -202,11 +204,23 @@
                     <div class="section-subtitle" style="margin-top: 20px;">🥑 ผลไม้ Premium (+10 บาท)</div>
                     <div class="option-group">
                         <div class="option-item">
-                            <input type="checkbox" id="top-avocado" name="topping-premium" value="อโวคาโด้" data-price="10" onchange="calculateTotal()">
+                            <input type="checkbox" id="top-avocado" class="topping-input" name="topping-premium" value="อโวคาโด้" data-price="10" onchange="handleToppingChange(this)">
                             <label for="top-avocado" class="option-label">
                                 <span class="icon">🥑</span>
                                 <span class="name">อโวคาโด้</span>
                                 <span class="price">+10 ฿</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="section-subtitle" style="margin-top: 20px;">🍪 ขนม / กรุบกรอบ (+5 บาท)</div>
+                    <div class="option-group">
+                        <div class="option-item">
+                            <input type="checkbox" id="snack-biscoff" class="topping-input" name="topping-snack" value="Biscoff" data-price="5" onchange="handleToppingChange(this)">
+                            <label for="snack-biscoff" class="option-label">
+                                <span class="icon">🍪</span>
+                                <span class="name">Biscoff</span>
+                                <span class="price">+5 ฿</span>
                             </label>
                         </div>
                     </div>
@@ -254,7 +268,7 @@
                         <span class="val" id="sum-size">1 สกูป (60g)</span>
                     </div>
                     <div class="summary-item">
-                        <span class="title">ท็อปปิ้ง:</span>
+                        <span class="title">ท็อปปิ้ง & ขนม:</span>
                         <span class="val" id="sum-topping-count">0 รายการ</span>
                     </div>
                     <div class="summary-toppings-list" id="sum-toppings-detail">- ไม่มีท็อปปิ้ง -</div>
@@ -277,32 +291,51 @@
 
     <script>
         const LINE_ACCOUNT_ID = "@212nfhof"; 
-        // ⚠️ วาง Web App URL ที่ได้จาก Google Apps Script ที่นี่ครับ
         const GOOGLE_SHEET_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwZNZiHd1ZAB-S0CnrzpuLtsh43HKeneXK6LLB2NnWloQ9hVGy1gIxFQEX0n5sMA4OUuA/exec"; 
 
         function checkScoopOption() {
             const selectedSize = document.querySelector('input[name="size"]:checked');
             const isNoFruit = selectedSize && (selectedSize.value === "1 สกูป (60g)" || selectedSize.value === "2 สกูป (120g)");
-            const toppingInputs = document.querySelectorAll('input[name="topping-normal"], input[name="topping-premium"]');
+            const allToppingInputs = document.querySelectorAll('.topping-input');
             const toppingCard = document.getElementById('topping-card');
 
             if (isNoFruit) {
-                toppingInputs.forEach(input => { input.checked = false; input.disabled = true; });
+                allToppingInputs.forEach(input => { input.checked = false; input.disabled = true; });
                 toppingCard.style.opacity = "0.6";
             } else {
-                toppingInputs.forEach(input => { input.disabled = false; });
                 toppingCard.style.opacity = "1";
+                // เรียกฟังก์ชันตรวจสอบลิมิตเพื่อเปิดคืนค่าปุ่มตามปกติ
+                handleToppingChange();
             }
             calculateTotal();
         }
 
-        function handleNormalToppingChange(element) {
-            const checkedNormalToppings = document.querySelectorAll('input[name="topping-normal"]:checked');
-            if (checkedNormalToppings.length > 3) {
-                alert("ผลไม้ธรรมดาสามารถเลือกได้ไม่เกิน 3 ชนิดครับ");
+        // ฟังก์ชันตรวจสอบจำนวนการเลือกท็อปปิ้งรวมทุกประเภท (ไม่เกิน 3 ชนิด)
+        function handleToppingChange(element) {
+            const allToppingInputs = document.querySelectorAll('.topping-input');
+            const checkedToppings = document.querySelectorAll('.topping-input:checked');
+
+            if (checkedToppings.length > 3 && element) {
+                alert("สามารถเลือกท็อปปิ้งและขนมรวมกันได้ไม่เกิน 3 ชนิดครับ");
                 element.checked = false;
                 return;
             }
+
+            // ถ้าเลือกครบ 3 ชนิดแล้ว ให้ล็อคตัวเลือกที่เหลือ แต่ตัวที่เลือกอยู่ยังกดเอาออกได้
+            const currentCheckedCount = document.querySelectorAll('.topping-input:checked').length;
+            const selectedSize = document.querySelector('input[name="size"]:checked');
+            const isNoFruit = selectedSize && (selectedSize.value === "1 สกูป (60g)" || selectedSize.value === "2 สกูป (120g)");
+
+            if (!isNoFruit) {
+                allToppingInputs.forEach(input => {
+                    if (currentCheckedCount >= 3) {
+                        input.disabled = !input.checked;
+                    } else {
+                        input.disabled = false;
+                    }
+                });
+            }
+
             calculateTotal();
         }
 
@@ -317,10 +350,12 @@
             const sizeName = sizeElement ? sizeElement.value : '';
             const sizePrice = sizeElement ? parseInt(sizeElement.getAttribute('data-price')) : 0;
 
+            // ผลไม้ธรรมดา (ฟรี)
             const normalToppingElements = document.querySelectorAll('input[name="topping-normal"]:checked');
             let normalToppingNames = [];
             normalToppingElements.forEach(item => normalToppingNames.push(item.value));
 
+            // ผลไม้ Premium (+10)
             const premiumToppingElements = document.querySelectorAll('input[name="topping-premium"]:checked');
             let premiumToppingPriceSum = 0;
             let premiumToppingNames = [];
@@ -329,8 +364,17 @@
                 premiumToppingNames.push(item.value + " (+10฿)");
             });
 
-            const total = sizePrice + premiumToppingPriceSum;
-            const allToppingNames = [...normalToppingNames, ...premiumToppingNames];
+            // หมวดขนม / สแน็ค (+5)
+            const snackElements = document.querySelectorAll('input[name="topping-snack"]:checked');
+            let snackPriceSum = 0;
+            let snackNames = [];
+            snackElements.forEach(item => {
+                snackPriceSum += parseInt(item.getAttribute('data-price'));
+                snackNames.push(item.value + " (+5฿)");
+            });
+
+            const total = sizePrice + premiumToppingPriceSum + snackPriceSum;
+            const allToppingNames = [...normalToppingNames, ...premiumToppingNames, ...snackNames];
 
             document.getElementById('sum-type').innerText = orderType;
             document.getElementById('sum-base').innerText = baseName;
@@ -358,11 +402,11 @@
             btnSubmit.innerText = "กำลังบันทึกออเดอร์...";
 
             // 1. ส่งข้อมูลเข้า Google Sheet แบบ Autonomous (เบื้องหลัง)
-            if (GOOGLE_SHEET_SCRIPT_URL && GOOGLE_SHEET_SCRIPT_URL !== "https://script.google.com/macros/s/AKfycbwZNZiHd1ZAB-S0CnrzpuLtsh43HKeneXK6LLB2NnWloQ9hVGy1gIxFQEX0n5sMA4OUuA/exec") {
+            if (GOOGLE_SHEET_SCRIPT_URL) {
                 try {
                     await fetch(GOOGLE_SHEET_SCRIPT_URL, {
                         method: 'POST',
-                        mode: 'no-cors', // รองรับการส่งข้ามโดเมนไปยัง Google Apps Script
+                        mode: 'no-cors',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             orderType: currentOrder.orderType,
@@ -385,7 +429,7 @@
             message += `------------------------------\n`;
             message += `🥣 *รสชาติ:* ${currentOrder.baseName}\n`;
             message += `🍨 *ตัวเลือก:* ${currentOrder.sizeName} (${currentOrder.sizePrice} บาท)\n`;
-            message += currentOrder.allToppingNames.length > 0 ? `🍓 *ท็อปปิ้ง:*\n  • ` + currentOrder.allToppingNames.join("\n  • ") + `\n` : `🍓 *ท็อปปิ้ง:* ไม่เลือกท็อปปิ้ง\n`;
+            message += currentOrder.allToppingNames.length > 0 ? `🍓 *ท็อปปิ้ง/ขนม:*\n  • ` + currentOrder.allToppingNames.join("\n  • ") + `\n` : `🍓 *ท็อปปิ้ง/ขนม:* ไม่เลือก\n`;
             message += `------------------------------\n`;
             message += `💰 *ราคารวม:* ${currentOrder.total} บาท\n`;
             message += `------------------------------\n`;
